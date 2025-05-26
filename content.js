@@ -1,3 +1,7 @@
+/**
+ * Fonctionnement principal de l'éxtension pour la vérification des modules 
+ * et les insersions des indications dans le DOM
+ */
 (() => {
   // Compare deux versions de type "x.y.z"
   function isNewerVersion(lastVersion, currentVersion) {
@@ -16,19 +20,44 @@
     return false; // identiques ou déjà à jour
   }
 
+  // Chaque ligne de module
   const rows = document.querySelectorAll(".table-data > tbody > tr");
+  
+  const totalPlugins = rows.length;
+  let completedFetches = 0;
+
+  // Fonction pour vérifier si tous les plugins ont été traités
+  const checkCompletion = () => {
+    completedFetches++;
+    if (completedFetches === totalPlugins) {
+      // Envoi un message au service worker une fois tout les fetches sont terminés
+      chrome.runtime.sendMessage({ type: "contentScriptFinished" });
+    }
+  };
 
   rows.forEach((row, index) => {
-    const link = row.querySelector("td:nth-child(8) > a:nth-child(1)");
-    if (!link) return;
+    const link = row.querySelector("td:nth-child(8) a");
+    if (!link) {
+      // Appelée si pas de lien pour ne pas bloquer la complétion
+      checkCompletion(); 
+      return;
+    }
     const url = link.getAttribute("href");
-    if (!url) return;
+    if (!url) {
+      // Appelée si pas d'URL pour ce plugin
+      checkCompletion(); 
+      return;
+    }
 
     // Envoie l'URL au service worker (background.js) pour effectuer un fetch
     chrome.runtime.sendMessage(
       { type: "fetchRemoteData", url: url, rowIndex: index },
       (response) => {
-        if (!response || !response.success) return;
+        if (!response || !response.success) {
+          // Appelée en cas d'échec du fetch
+          checkCompletion(); 
+          return;
+        }
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(response.html, "text/html");
@@ -37,7 +66,11 @@
         const text = doc.querySelector(".header-title")?.textContent?.trim() || "";
         const parts = text.split(" ");
         const lastVersion = parts[parts.length - 1];
-        if (!lastVersion) return;
+        if (!lastVersion) {
+          // Appelée si pas de version distante trouvée
+          checkCompletion(); 
+          return;
+        }
 
         // Extraction de la version actuelle
         const currentCell = row.querySelector("td:nth-child(4)");
@@ -57,12 +90,14 @@
         // Compare les versions
         const toUpdate = isNewerVersion(cleanLast, cleanCurrent);
 
-        // Ajout d'une nouvelle cellule à droite avec le statut
+        // Ajout d'une nouvelle cellule à chaque ligne avec le statut
         const cell = document.createElement("td");
         cell.classList.add("jplugcheck-indicator");
         cell.textContent = toUpdate ? `⚠️ Nouvelle version : ${cleanLast}` : `✅ À jour en version ${cleanLast}`;
         cell.style.backgroundColor = toUpdate ? "#ff000017" : "#00c80017";
         row.appendChild(cell);
+        // Appelée après avoir terminé le traitement de ce plugin
+        checkCompletion(); 
       }
     );
   });

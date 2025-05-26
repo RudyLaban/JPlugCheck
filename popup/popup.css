@@ -1,24 +1,90 @@
 BODY {
-    min-width: 120px;
+    min-width: 180px;
+    font-family: Tahoma, sans-serif;
+    font-size: 14px;
+    margin: 46px 16px 12px 16px;
 }
-#btn-container { 
-    display: none; margin: 1em 0; 
-    P { margin-top: 0; }
+
+BODY HEADER {
+    font-size: 15px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 6px 8px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+
+    img {
+        height: 20px;
+    }
 }
-#error-msg { 
-    color: red; font-weight: bold; 
+
+.jpc-bloc {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.jpc-bloc p {
+    margin-top: 0;
+}
+#main {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+#error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+#check-is-done {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+#fetch-btn-bloc {
+    margin-top: 10px;
+}
+
+#fetch-btn {
+    color: #fff;
+    background-color: #009ef5;
+    border: 1px solid #009ef5;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+#fetch-btn:hover {
+    background-color: #007dc2;
+    border-color: #0077b8;
+}
+button#fetch-btn.disabled {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    opacity: .65;
+    background-color: #009ef5;
+    border-color: #009ef5;
 }
 
 .loader {
-    margin-left: 10px;
-    border: 3px solid #f3f3f3;       /* cercle de fond */
-    border-top: 3px solid #555;      /* partie animée */
+    border: 3px solid #ffffff;       /* cercle de fond */
+    border-top: 3px solid #79aadf;      /* partie animée */
     border-radius: 50%;
     width: 16px;
     height: 16px;
-    animation: spin 0.8s linear infinite;
+    animation: spin 0.9s linear infinite;
     display: inline-block;
-    vertical-align: middle;
+    position: absolute;
+    margin-top: 3px;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    margin-left: 12px;
 }
 @keyframes spin {
     0% { transform: rotate(0deg); }

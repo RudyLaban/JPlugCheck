@@ -1,5 +1,8 @@
 /**
- * Cette fonction sera injectée et exécutée dans le contexte du content script
+ * Vérifie si le controle des versions a déjà été lancée 
+ * en verifiant l'existance d'un élément ayant la classe .jplugcheck-indicator 
+ * 
+ * Fonction injectée et exécutée dans le contexte du content script
  * 
  * @returns true si l'élément existe, sinon false
  */
@@ -38,10 +41,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return;
           }
           if (injectionResults && injectionResults[0] && injectionResults[0].result !== undefined) {
-            // Récupérer le résultat et l'envoyer à la popup
+            // S'il est OK, récupère le résultat et l'envoyer à la popup
             sendResponse({ elementExists: injectionResults[0].result });
           } else {
-            sendResponse({ elementExists: false }); // Gérer le cas où le résultat est inattendu
+            // Cas où le résultat est inattendu
+            sendResponse({ elementExists: false }); 
           }
         });
       }
@@ -49,5 +53,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     // Réponse envoyée de manière asynchrone
     return true;
+  }
+
+  // content.js -> Écoute le message de fin de traitement du content script
+  if(request.type === "contentScriptFinished") {
+    chrome.runtime.sendMessage({ type: "processingCompleted" });
+    return false;
   }
 });

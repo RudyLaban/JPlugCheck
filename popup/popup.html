@@ -6,12 +6,32 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <p id="error-msg">Rendez-vous sur votre page de gestion des modules pour vérifier ceux obsolète.</p>
-  <div id="btn-container">
-    <p>Verifier les versions des modules Jalios</p>
-    <button id="fetchBtn">Lancer</button>
-    <span id="loader" class="loader" style="display: none;"></span>
+  <header>
+    <img src="/images/clear/icon_clear-32.png">
+    <span>
+      JPlugCheck
+    </span>
+  </header>
+
+  <!-- Bloc principal -->
+  <div id="main" class="jpc-bloc">
+    <span>Verifier les versions des modules Jalios</span>
+    <div id="fetch-btn-bloc">
+      <button id="fetch-btn">
+        Lancer
+      </button>
+      <span id="loader" class="loader" style="display: none;"></span>
+    </div>
   </div>
+  <!-- Bloc erreur -->
+  <div id="error" class="jpc-bloc">
+    <span>Vous n'êtes pas sur une page de gestion des modules Jalios</span>
+  </div>
+  <!-- Bloc "verification faite" -->
+  <div id="check-is-done" class="jpc-bloc">
+    <span>Contrôle des modules terminé !</span>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>

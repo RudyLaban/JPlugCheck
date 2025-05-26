@@ -1,24 +1,85 @@
-// Vérifie qu'on est bien sur la page de gestion des modules
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  const url = tabs[0].url;
-
-  if (url.includes("/admin/pluginManager.jsp")) {
-    document.getElementById("error-msg").style.display = "none";
-    document.getElementById("btn-container").style.display = "inline-block";
-  } else {
-    document.getElementById("error-msg").style.display = "block";
-    document.getElementById("btn-container").style.display = "none";
-  }
-});
-
-
+const blocMain = document.querySelector(".jpc-bloc#main");
+const blocError = document.querySelector(".jpc-bloc#error");
+const blocDone = document.querySelector(".jpc-bloc#check-is-done");
 const loader = document.getElementById("loader");
-const fetchBtn = document.getElementById("fetchBtn");
+const fetchBtn = document.getElementById("fetch-btn");
 
-// Ecoute du clic sur le bouton de la popup
+// URL de la page de gestion des modules Jalios
+const JALIOS_PLUGIN_MANAGER_URL_PART = "/admin/pluginManager.jsp";
+
+/**
+ * Masque tous les blocs pour éviter les conflits d'affichage
+ */
+function hideAllBlocks() {
+  blocMain.style.display = "none";
+  blocError.style.display = "none";
+  blocDone.style.display = "none";
+  loader.style.display = "none";
+}
+
+/**
+ * Orchestre l'initialisation de l'interface utilisateur de la popup.
+ * Gère l'affichage basé sur l'URL et l'état de l'indicateur dans la page.
+ */
+async function initializePopupUI() {
+  hideAllBlocks();
+
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const url = tabs[0].url;
+
+    // Affichage initial en fonction de l'URL
+    if (url.includes(JALIOS_PLUGIN_MANAGER_URL_PART)) {
+      // Vérifie le DOM pour décider quel bloc afficher
+      await checkDomElementAndDisplayBlocs();
+    } else {
+      // Si l'URL n'est pas correcte, afficher le message d'erreur
+      blocError.style.display = "block";
+    }
+  } catch (error) {
+    console.error("Erreur lors de l'initialisation de la popup :", error);
+    blocError.style.display = "block";
+    blocError.textContent = "Une erreur est survenue lors du chargement de la popup.";
+  }
+}
+
+/**
+ * Vérifie l'existence de l'élément indicateur sur la page courante
+ * affiche le bloc principal ou le bloc "check-is-done" en conséquence.
+ */
+async function checkDomElementAndDisplayBlocs() {
+  try {
+    const response = await chrome.runtime.sendMessage({ action: "getPageDomElement" });
+    console.log("Réponse du service worker (checkDomElementAndDisplayBlocs):", response);
+
+    if (response && response.elementExists) {
+      // Si l'élément existe, c'est que la vérification a déjà été faite
+      blocDone.style.display = "block";
+      blocMain.style.display = "none";
+      fetchBtn.removeAttribute("disabled");
+      fetchBtn.classList.remove("disabled");
+    } else {
+      // Sinon, on affiche le bloc principal pour lancer la vérification
+      blocMain.style.display = "block";
+      blocDone.style.display = "none";
+      fetchBtn.removeAttribute("disabled");
+      fetchBtn.classList.remove("disabled");
+    }
+  } catch (e) {
+    console.error("Erreur lors de la vérification de l'élément DOM :", e);
+    // pour permettre une tentative de relance en cas d'erreur
+    blocMain.style.display = "block";
+    blocDone.style.display = "none";
+    blocError.style.display = "none";
+    fetchBtn.removeAttribute("disabled");
+    fetchBtn.classList.remove("disabled");
+  }
+}
+
+// Écoute du clic sur le bouton de la popup
 fetchBtn.addEventListener("click", () => {
-
-  fetchBtn.setAttribute("disabled", "");
+  fetchBtn.setAttribute("disabled", "true");
+  fetchBtn.classList.add("disabled");
   loader.style.display = "inline-block";
 
   // Récupère l'onglet actif dans la fenêtre actuelle
@@ -27,35 +88,20 @@ fetchBtn.addEventListener("click", () => {
     chrome.scripting.executeScript({
       target: { tabId: tabs[0].id },
       files: ["content.js"]
-    }, () => {
-      // Masque le loader après un court délai
-      setTimeout(() => {
-        loader.style.display = "none";
-      }, 1800);
     });
   });
 });
 
-/**
- * Vérifie si la vérification a déjà été lancée
- */
-document.addEventListener('DOMContentLoaded', () => {
-  async function checkDomElementAndDisableButton() {
-    try {
-      const response = await chrome.runtime.sendMessage({ action: "getPageDomElement" });
-      console.log("Réponse du service worker :", response);
-
-      // Active ou désactive le bouton de la popup
-      if (response && response.elementExists) {
-        fetchBtn.setAttribute("disabled", "");
-      } else {
-        fetchBtn.removeAttribute("disabled");
-      }
-    } catch (e) {
-      console.error("Erreur lors de la vérification de l'élément DOM :", e);
-      fetchBtn.removeAttribute("disabled"); // En cas d'erreur, ne pas désactiver le bouton
-    }
+// Écoute les messages venant de n'importe quel script de l'extension (y compris le service worker)
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === "processingCompleted") {
+    blocDone.style.display = "block";
+    blocMain.style.display = "none";
+    loader.style.display = "none";
+    fetchBtn.removeAttribute("disabled");
+    fetchBtn.classList.remove("disabled");
   }
-
-  checkDomElementAndDisableButton();
 });
+
+// Lance l'initialisation de l'UI lorsque le DOM de la popup est entièrement chargé
+document.addEventListener('DOMContentLoaded', initializePopupUI);
