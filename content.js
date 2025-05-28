@@ -3,10 +3,10 @@
  * et les insertions des indications dans le DOM
  */
 (() => {
-  // Compare deux versions de type "x.y.z"
-  function isNewerVersion(lastVersion, currentVersion) {
-    const lastParts = lastVersion.split('.').map(Number);
-    const currentParts = currentVersion.split('.').map(Number);
+  // Compare deux versions de type "x.y.z" ou "x.y-z"
+  function isNewerVersion(lastVersion, localVersion) {
+    const lastParts = lastVersion.split(/[.-]/).map(Number);
+    const currentParts = localVersion.split(/[.-]/).map(Number);
     const length = Math.max(lastParts.length, currentParts.length);
 
     for (let i = 0; i < length; i++) {
@@ -29,11 +29,11 @@
   // Lancé à chaque traitement de module pour envoyer un
 	// message au service worker une fois toutes les lignes traitées.
   const signalPluginProcessed = () => {
-      completedFetches++;
-      if (completedFetches === totalPlugins) {
-          chrome.runtime.sendMessage({ type: "contentScriptFinished" });
-        }
-    };
+    completedFetches++;
+    if (completedFetches === totalPlugins) {
+      chrome.runtime.sendMessage({ type: "contentScriptFinished" });
+    }
+  };
     
 	// Cellule d'entête
 	const th = document.querySelector(".table-data > thead > tr");
@@ -52,6 +52,7 @@
     const cell = document.createElement("td");
     cell.classList.add("jplugcheck-indicator");
 
+    const pluginName = row.querySelector("td:nth-child(5) a")?.textContent?.trim();
     const link = row.querySelector("td:nth-child(8) a");
 
     // Gère les différents cas de non-traitement ou d'erreur
@@ -63,12 +64,12 @@
     };
 
     if (!link) {
-      handleNoData("Pas de lien de module");
+      handleNoData(`Pas de lien pour le ${pluginName}`);
       return;
     }
     const url = link.getAttribute("href");
     if (!url) {
-      handleNoData("URL de module manquante");
+      handleNoData(`URL du ${pluginName} manquante`);
       return;
     }
 
@@ -77,7 +78,7 @@
       { type: "fetchRemoteData", url: url, rowIndex: index },
       (response) => { // Response représente la page html du module sur Community
         if (!response || !response.success) {
-          handleNoData("Échec du fetch des données");
+          handleNoData(`Échec du fetch des données pour le ${pluginName}`);
           return;
         }
 
@@ -87,39 +88,62 @@
         // Si Community affiche sa page "Page introuvable"
         const metaOgTitle = doc.querySelector('meta[property="og:title"]');
         if (metaOgTitle && metaOgTitle.getAttribute('content') === "Page introuvable") {
-          handleNoData("Page introuvable sur Community");
+          handleNoData(`Page introuvable sur Community pour le ${pluginName}`);
           return;
         }
 
         // Récupère la version distante
-        const text = doc.querySelector(".header-title")?.textContent?.trim() || "";
-        const parts = text.split(" ");
-        const lastVersion = parts[parts.length - 1];
+        let lastVersionContent = doc.querySelector(".header-title");
+        let lastVersionTitle = "";
+        let lastVersion = "";
+        let isPatch = false;
+
+        // On cherche le PatchPlugin
+        if (!lastVersionContent) {
+          lastVersionTitle = doc.querySelector('.publication-title')?.textContent?.trim() || "";
+          lastVersion = lastVersionTitle.split(" - ").slice(1).join("-");
+          isPatch = true;
+        } else {// On cherche un Plugin normale
+          lastVersionTitle = lastVersionContent?.textContent?.trim() || "";
+          const parts = lastVersionTitle.split(" ");
+          lastVersion = parts[parts.length - 1];
+        }
+
         if (!lastVersion) {
-          handleNoData("Version distante non trouvée");
+          handleNoData(`Version distante du ${pluginName} non trouvée`);
           return;
         }
 
-        // Extraie la version actuelle
-        const currentCellContent = row.querySelector("td:nth-child(4)");
-        let currentText = "0.0.0";
+        // Extraie la version installée en locale
+        const localCellContent = row.querySelector("td:nth-child(4)");
+        let localVersion = "0.0.0";
 
-        if (currentCellContent) {
-          const textNode = Array.from(currentCellContent.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
-          currentText = textNode?.textContent.trim() || "0.0.0";
+        if (localCellContent) {
+          const localVersionNode = Array.from(localCellContent.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+          localVersion = localVersionNode?.textContent.trim() || "0.0.0";
         }
 
         // Nettoie basique : garde uniquement chiffres et points
-        const clean = v => v.trim().replace(/[^0-9.]/g, '');
-        const cleanCurrent = clean(currentText);
+        const clean = v => v.trim().replace(/[^0-9.-]/g, '');
+        const cleanLocal = clean(localVersion);
         const cleanLast = clean(lastVersion);
 
         // Compare les versions
-        const toUpdate = isNewerVersion(cleanLast, cleanCurrent);
+        const toUpdate = isNewerVersion(cleanLast, cleanLocal);
 
         // Remplis la cellule avec le statut et le style approprié
-        cell.textContent = toUpdate ? `⚠️ Nouvelle version : ${cleanLast}` : `✅ À jour en version ${cleanLast}`;
-        cell.style.backgroundColor = toUpdate ? "#ff000017" : "#00c80017";
+        if (toUpdate) {
+          if (isPatch) {
+            cell.textContent = `🩹 Nouveau Patch : ${cleanLast}`;
+            cell.style.backgroundColor = "#009ef517";
+          } else {
+            cell.textContent = `⚠️ Nouvelle version : ${cleanLast}`;
+            cell.style.backgroundColor = "#ff000017";
+          }
+        } else {
+          cell.textContent = `✅ À jour en version ${cleanLast}`;
+          cell.style.backgroundColor = "#00c80017";
+        }
 
         row.appendChild(cell);
         signalPluginProcessed();

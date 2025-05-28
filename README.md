@@ -19,6 +19,7 @@ Elle met en évidence les **plugins nécessitant une mise à jour**, directement
 - **Indicateurs visuels clairs :** affiche dans le tableau un symbole :
   - ✅ À jour en version x.y.z
   - ⚠️ Nouvelle version : x.y.z
+  - 🩹 Nouveau Patch : x.y-zzz
 
 ## Installation
 
@@ -66,5 +67,5 @@ L’extension sera bientôt disponible sur les stores Chrome, Edge et Firefox.
 
 - [ ] 🌐 Déploiement sur les stores Chrome / Edge / Firefox
 - [ ] ⬇️ Téléchargement des plugins directement depuis l’extension
-- [ ] 🩹 Inclusion du PatchPlugin au rapport
+- [x] 🩹 Inclusion du PatchPlugin au rapport
 - [ ] 🎨 Amélioration de l’interface utilisateur
