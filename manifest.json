@@ -11,6 +11,12 @@
   "background": {
     "service_worker": "service-worker.js"
   },
+  "web_accessible_resources": [
+    {
+      "resources": [ "images/clear/icon_clear-16.png" ],
+      "matches": [ "<all_urls>" ]
+    }
+  ],
   "action": {
     "default_title": "Identifiez vos plugins Jalios obsolète",
     "default_popup": "popup/popup.html",

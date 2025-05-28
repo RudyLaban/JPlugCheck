@@ -22,6 +22,7 @@
 
   // Chaque ligne de module
   const rows = document.querySelectorAll(".table-data > tbody > tr");
+  const th = document.querySelector(".table-data > thead > tr");
   
   const totalPlugins = rows.length;
   let completedFetches = 0;
@@ -36,6 +37,19 @@
   };
 
   rows.forEach((row, index) => {
+    // Ajout cellule d'entête
+    if(index === 0) {
+      const thCell = document.createElement("th");
+      const text = document.createTextNode('Rapport JPlugCheck');
+      const imgURL = chrome.runtime.getURL('images/clear/icon_clear-16.png');
+      const thImg = document.createElement("img");
+      thImg.setAttribute('src', imgURL);
+      thCell.appendChild(thImg);
+      thCell.appendChild(document.createTextNode(" "));
+      thCell.appendChild(text);
+      th.appendChild(thCell);
+    }
+    
     const link = row.querySelector("td:nth-child(8) a");
     if (!link) {
       // Appelée si pas de lien pour ne pas bloquer la complétion
