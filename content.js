@@ -1,6 +1,6 @@
 /**
- * Fonctionnement principal de l'éxtension pour la vérification des modules 
- * et les insersions des indications dans le DOM
+ * Fonctionnement principal de l'extension pour la vérification des modules
+ * et les insertions des indications dans le DOM
  */
 (() => {
   // Compare deux versions de type "x.y.z"
@@ -22,81 +22,94 @@
 
   // Chaque ligne de module
   const rows = document.querySelectorAll(".table-data > tbody > tr");
-  const th = document.querySelector(".table-data > thead > tr");
   
   const totalPlugins = rows.length;
   let completedFetches = 0;
-
-  // Fonction pour vérifier si tous les plugins ont été traités
-  const checkCompletion = () => {
-    completedFetches++;
-    if (completedFetches === totalPlugins) {
-      // Envoi un message au service worker une fois tout les fetches sont terminés
-      chrome.runtime.sendMessage({ type: "contentScriptFinished" });
-    }
-  };
+  
+  // Lancé à chaque traitement de module pour envoyer un
+	// message au service worker une fois toutes les lignes traitées.
+  const signalPluginProcessed = () => {
+      completedFetches++;
+      if (completedFetches === totalPlugins) {
+          chrome.runtime.sendMessage({ type: "contentScriptFinished" });
+        }
+    };
+    
+	// Cellule d'entête
+	const th = document.querySelector(".table-data > thead > tr");
+	const thCell = document.createElement("th");
+	const text = document.createTextNode('Rapport JPlugCheck');
+	const imgURL = chrome.runtime.getURL('images/clear/icon_clear-16.png');
+	const thImg = document.createElement("img");
+	thImg.setAttribute('src', imgURL);
+	thCell.appendChild(thImg);
+	thCell.appendChild(document.createTextNode(" "));
+	thCell.appendChild(text);
+	th.appendChild(thCell);
 
   rows.forEach((row, index) => {
-    // Ajout cellule d'entête
-    if(index === 0) {
-      const thCell = document.createElement("th");
-      const text = document.createTextNode('Rapport JPlugCheck');
-      const imgURL = chrome.runtime.getURL('images/clear/icon_clear-16.png');
-      const thImg = document.createElement("img");
-      thImg.setAttribute('src', imgURL);
-      thCell.appendChild(thImg);
-      thCell.appendChild(document.createTextNode(" "));
-      thCell.appendChild(text);
-      th.appendChild(thCell);
-    }
-    
+    // Nouvelle cellule pour cette ligne
+    const cell = document.createElement("td");
+    cell.classList.add("jplugcheck-indicator");
+
     const link = row.querySelector("td:nth-child(8) a");
+
+    // Gère les différents cas de non-traitement ou d'erreur
+    const handleNoData = (reason) => {
+			console.debug(reason)
+      signalPluginProcessed();
+      // Ajoute la cellule vide
+      row.appendChild(cell);
+    };
+
     if (!link) {
-      // Appelée si pas de lien pour ne pas bloquer la complétion
-      checkCompletion(); 
+      handleNoData("Pas de lien de module");
       return;
     }
     const url = link.getAttribute("href");
     if (!url) {
-      // Appelée si pas d'URL pour ce plugin
-      checkCompletion(); 
+      handleNoData("URL de module manquante");
       return;
     }
 
     // Envoie l'URL au service worker (background.js) pour effectuer un fetch
     chrome.runtime.sendMessage(
       { type: "fetchRemoteData", url: url, rowIndex: index },
-      (response) => {
+      (response) => { // Response représente la page html du module sur Community
         if (!response || !response.success) {
-          // Appelée en cas d'échec du fetch
-          checkCompletion(); 
+          handleNoData("Échec du fetch des données");
           return;
         }
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(response.html, "text/html");
 
-        // Récupération de la version distante
+        // Si Community affiche sa page "Page introuvable"
+        const metaOgTitle = doc.querySelector('meta[property="og:title"]');
+        if (metaOgTitle && metaOgTitle.getAttribute('content') === "Page introuvable") {
+          handleNoData("Page introuvable sur Community");
+          return;
+        }
+
+        // Récupère la version distante
         const text = doc.querySelector(".header-title")?.textContent?.trim() || "";
         const parts = text.split(" ");
         const lastVersion = parts[parts.length - 1];
         if (!lastVersion) {
-          // Appelée si pas de version distante trouvée
-          checkCompletion(); 
+          handleNoData("Version distante non trouvée");
           return;
         }
 
-        // Extraction de la version actuelle
-        const currentCell = row.querySelector("td:nth-child(4)");
+        // Extraie la version actuelle
+        const currentCellContent = row.querySelector("td:nth-child(4)");
         let currentText = "0.0.0";
 
-        if (currentCell) {
-          // Ne garde que le texte brut visible avant les éléments HTML internes
-          const textNode = Array.from(currentCell.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+        if (currentCellContent) {
+          const textNode = Array.from(currentCellContent.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
           currentText = textNode?.textContent.trim() || "0.0.0";
         }
 
-        // Nettoyage basique : garde uniquement chiffres et points
+        // Nettoie basique : garde uniquement chiffres et points
         const clean = v => v.trim().replace(/[^0-9.]/g, '');
         const cleanCurrent = clean(currentText);
         const cleanLast = clean(lastVersion);
@@ -104,14 +117,12 @@
         // Compare les versions
         const toUpdate = isNewerVersion(cleanLast, cleanCurrent);
 
-        // Ajout d'une nouvelle cellule à chaque ligne avec le statut
-        const cell = document.createElement("td");
-        cell.classList.add("jplugcheck-indicator");
+        // Remplis la cellule avec le statut et le style approprié
         cell.textContent = toUpdate ? `⚠️ Nouvelle version : ${cleanLast}` : `✅ À jour en version ${cleanLast}`;
         cell.style.backgroundColor = toUpdate ? "#ff000017" : "#00c80017";
+
         row.appendChild(cell);
-        // Appelée après avoir terminé le traitement de ce plugin
-        checkCompletion(); 
+        signalPluginProcessed();
       }
     );
   });
