@@ -1,8 +1,11 @@
 # JPlugCheck
 
-## Jalios Plugins Version Checker
-
-![Icon](images/clear/icon_clear-128.png)
+<h1 align="center">
+  <sub>
+    <img src="images/clear/icon_clear-48.png">
+  </sub>
+  Jalios Plugins Version Checker
+</h1>
 
 ![Version](https://img.shields.io/badge/version-1.0-blue.svg)
 ![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Soon-orange.svg?logo=google-chrome)
@@ -69,3 +72,13 @@ L’extension sera bientôt disponible sur les stores Chrome, Edge et Firefox.
 - [ ] ⬇️ Téléchargement des plugins directement depuis l’extension
 - [x] 🩹 Inclusion du PatchPlugin au rapport
 - [ ] 🎨 Amélioration de l’interface utilisateur
+
+## À propos
+
+> [!NOTE]
+> Cette extension n’est **ni affiliée ni soutenue par Jalios**.  
+> Elle utilise des pages et informations **publiquement accessibles** sur [community.jalios.com](https://community.jalios.com), sans authentification ni accès privé.
+> Les données extraites ne sont ni stockées ni revendues.  
+> L’objectif est d’améliorer la lisibilité des modules dans l’interface d’administration Jplatform.
+
+Ce projet est publié sous licence **MIT**. Voir le fichier [LICENSE](LICENSE.txt).
