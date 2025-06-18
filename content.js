@@ -57,7 +57,7 @@
 
     // Gère les différents cas de non-traitement ou d'erreur
     const handleNoData = (reason) => {
-			console.debug(reason)
+			console.debug(`[JPlugCheck] ${reason}`)
       signalPluginProcessed();
       // Ajoute la cellule vide
       row.appendChild(cell);
