@@ -10,7 +10,7 @@
 <span align="center">
 
   ![Version][BADGE_VERSION]
-  ![Chrome Web Store][BADGE_CHROME]
+  [![Chrome Web Store][BADGE_CHROME]][CHROME_LINK]
   ![Edge Add-on][BADGE_EDGE]
   ![Firefox Add-on][BADGE_FIREFOX]
 
@@ -35,7 +35,12 @@ Elle met en évidence les **plugins nécessitant une mise à jour**, directement
 
 ## Installation
 
-### Option 1 : depuis ce dépôt (installation locale)
+### Option 1 : via les stores de navigateur (disponibilité partielle)
+
+- [Chrome][CHROME_LINK]
+> L’extension sera bientôt disponible sur les stores **Edge** et **Firefox**.
+
+### Option 2 : depuis ce dépôt (installation locale)
 
 **Via Git :**
 
@@ -54,10 +59,6 @@ git clone https://github.com/RudyLaban/JPlugCheck.git
 2. Activer le **mode développeur** en haut de la page.
 3. Cliquer sur **"Charger l'extension non empaquetée / décompressée"**.
 4. Sélectionner le dossier contenant `manifest.json`.
-
-### Option 2 : via les stores (bientôt disponible)
-
-L’extension sera bientôt disponible sur les stores Chrome, Edge et Firefox.
 
 ## Utilisation
 
@@ -78,7 +79,7 @@ L’extension sera bientôt disponible sur les stores Chrome, Edge et Firefox.
 ### Fonctionnelles
 
 - [ ] 🌐 Déploiement sur les stores de navigateurs :
-  - [ ] Chrome
+  - [x] Chrome
   - [ ] Edge
   - [ ] Firefox
 - [x] 🩹 Inclusion du PatchPlugin au rapport
@@ -104,6 +105,8 @@ L’extension sera bientôt disponible sur les stores Chrome, Edge et Firefox.
 
 <!-- CONSTANTES -->
 [BADGE_VERSION]: https://img.shields.io/badge/version-1.1-blue.svg
-[BADGE_CHROME]: https://img.shields.io/badge/Chrome%20Web%20Store-pending-yellow.svg?logo=google-chrome
+[BADGE_CHROME]: https://img.shields.io/badge/Chrome%20Web%20Store-ready-blue.svg?logo=google-chrome
 [BADGE_EDGE]: https://img.shields.io/badge/Edge%20Add--on-soon-orange.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAexJREFUSEutVcFxwjAQXGVIH/CGzNgVYFUSqMS4EqASORXYM4E3pA4Iik/SOUKWbZjEn2SQdLt7t3cnMPAlqppegZW9IpYAMg2cBXC2f/XXBNjVMj33hRGxg9/AIh8iQGcMKKD3nzLdhfc7AAtVZQ1bNRY4fq6Lg0w3/tkdwN+C27Ck6CiTGYO0AP8RnINqYHeUydpUjn+cq/okgKmfV/f/lH9/Lm02XQbgTVWrG0T+Al3ECsVF1xDvj4JxqgwApecg09JzD1myzekL9AcBP+Mu97owAPTwApE3/nae7ybD+X5Psheq2gDjFm76pnQKarJlNpxjXXBTWSViO/bGkJqrevsA8zWl0CfwqOsIoHVPT/PIMDin9QpxGlJtFCxUrfsvdTvzXsXQW2PyggB68z+Bnl1db4QqyNra1iH6EftXaNkLwN1IBJynTWfyN6TcOc7UTfQzsemhQP4DBog5ybcy3xPuYqdYzaxfU3MxU5Y8NPtjuRroA+t73ykxhrGgRJqJ+J2sgjlTHmQiYyZgIOrUCdBuM2cI2ic5GYRA2mka1oKH1ZhbxnonXDjBjNGSGF4gQnW9rcO1a4sc3vQZs4o+I/hvY06j89Glz/3gJm5HyVjhowC+17+B7AaxpBXo9oHZcA0wbb8yNqd8ZT8m7T7gMXe23gAAAABJRU5ErkJggg==
 [BADGE_FIREFOX]: https://img.shields.io/badge/Firefox%20Add--on-soon-orange.svg?logo=firefoxbrowser
+
+[CHROME_LINK]: https://chromewebstore.google.com/detail/jplugcheck/cbkakodcfmlmghnbmgmdjegbmhbcmmeo
