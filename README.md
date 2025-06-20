@@ -90,7 +90,7 @@ git clone https://github.com/RudyLaban/JPlugCheck.git
 
 ### Techniques
 
-- [ ] 📃 Ajout d'un changelog.md
+- [x] 📃 Ajout d'un changelog.md
 - [ ] 🔄 Ajout d'un workflow git générant un zip au push d'un tag de version
 
 ## À propos
