@@ -84,11 +84,17 @@ fetchBtn.addEventListener("click", () => {
 
   // Récupère l'onglet actif dans la fenêtre actuelle
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tabId = tabs[0].id;
     // Injecte le script content.js dans la page de l'onglet actif
     chrome.scripting.executeScript({
-      target: { tabId: tabs[0].id },
+      target: { tabId: tabId },
       files: ["content.js"]
     });
+    // Injecter le CSS
+    chrome.scripting.insertCSS({
+      target: { tabId: tabId },
+      files: ["/style/jPlugCheck.css"]
+    })
   });
 });
 

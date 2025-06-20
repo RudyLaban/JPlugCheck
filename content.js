@@ -25,27 +25,48 @@
   
   const totalPlugins = rows.length;
   let completedFetches = 0;
+  let nbPluginsCompared = 0;
+  let nbPluginUpTodate = 0;
+  let rate = 0;
   
   // Lancé à chaque traitement de module pour envoyer un
-	// message au service worker une fois toutes les lignes traitées.
   const signalPluginProcessed = () => {
     completedFetches++;
+    // Une fois toutes les lignes traitées.
     if (completedFetches === totalPlugins) {
+      // Pourcentage de module à jour
+      rate = Math.round((nbPluginUpTodate / nbPluginsCompared) * 100);
+      let rateClass = "good"
+      if (rate < 50) {
+        rateClass = "bad";
+      }
+      else if (rate < 80) {
+        rateClass = "medium";
+      }
+      const thRate = document.querySelector(".jpc-th .rate");
+      thRate.setAttribute("title", "Pourcentage de modules à jours.")
+      thRate.classList.add(rateClass);
+      thRate.append(rate + '%');
+
+      // message au service worker
       chrome.runtime.sendMessage({ type: "contentScriptFinished" });
     }
   };
     
 	// Cellule d'entête
-	const th = document.querySelector(".table-data > thead > tr");
-	const thCell = document.createElement("th");
-	const text = document.createTextNode('Rapport JPlugCheck');
-	const imgURL = chrome.runtime.getURL('images/clear/icon_clear-16.png');
-	const thImg = document.createElement("img");
-	thImg.setAttribute('src', imgURL);
-	thCell.appendChild(thImg);
-	thCell.appendChild(document.createTextNode(" "));
-	thCell.appendChild(text);
-	th.appendChild(thCell);
+  const thead = document.querySelector(".table-data > thead > tr");
+  const th = document.createElement("th");
+  const labelWrapper = document.createElement("span");
+  const thImg = document.createElement("img");
+  const spanRate = document.createElement("span");
+  
+  thImg.src = chrome.runtime.getURL('images/clear/icon_clear-16.png');
+  labelWrapper.classList.add('label-wrapper')
+  labelWrapper.append(thImg, " Rapport");
+  spanRate.classList.add('rate');
+  th.classList.add('jpc-th')
+  th.append(labelWrapper, spanRate);
+  thead.appendChild(th);
 
   rows.forEach((row, index) => {
     // Nouvelle cellule pour cette ligne
@@ -123,6 +144,8 @@
           localVersion = localVersionNode?.textContent.trim() || "0.0.0";
         }
 
+        nbPluginsCompared++;
+
         // Nettoie basique : garde uniquement chiffres et points
         const clean = v => v.trim().replace(/[^0-9.-]/g, '');
         const cleanLocal = clean(localVersion);
@@ -141,6 +164,7 @@
             cell.style.backgroundColor = "#ff000017";
           }
         } else {
+          nbPluginUpTodate++;
           cell.textContent = `✅ À jour en version ${cleanLast}`;
           cell.style.backgroundColor = "#00c80017";
         }

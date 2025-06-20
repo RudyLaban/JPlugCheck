@@ -1,15 +1,22 @@
-# 1.2 - En cours
+# CHANGELOG
 
-## Changes
+## 1.2 - En cours
+
+### Feats
+
+- [Pourcentage de modules à jour]()
+- [Injection d'une feuille css pour retrait des styles au sein du JS]()
+
+### Changes
 
 - [[DOC] Chrome - Ajout du lien de l'extension](https://github.com/RudyLaban/JPlugCheck/commit/b2da38d61deceb9c79580cbdc6f7b9ce2f17ea73)
 - [Reformulation et ajout à la doc](https://github.com/RudyLaban/JPlugCheck/commit/4e745b2c961f56fbf491764aa33620000c9ac819)
 
 ---
 
-# 1.1 - Publiée (16.06.25)
+## 1.1 - Publiée (16.06.25)
 
-## Fixes
+### Fixes
 
 - [FIX pour v1.1](https://github.com/RudyLaban/JPlugCheck/commit/b2da38d61deceb9c79580cbdc6f7b9ce2f17ea73)
   - activeTab pour l'injection de content.js
@@ -18,9 +25,9 @@
 
 ---
 
-# 1.0 - Version initiale (31.05.25)
+## 1.0 - Version initiale (31.05.25)
 
-## Feats
+### Feats
 
 - [Màj doc + ajout licence](https://github.com/RudyLaban/JPlugCheck/commit/97aa077a06a8126eb6dba27a381cfc41f0ab272e)
 - [Inclusion du PatchPlugin au rapport](https://github.com/RudyLaban/JPlugCheck/commit/dcfdf3b6613511c2a3ac6778140155a89133b8a8)

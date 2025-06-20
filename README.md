@@ -84,7 +84,7 @@ git clone https://github.com/RudyLaban/JPlugCheck.git
   - [ ] Firefox
 - [x] 🩹 Inclusion du PatchPlugin au rapport
 - [ ] ℹ️ Indication sur la compatibilité d'un nouveau module avec la version de JPlatform
-- [ ] 💯 Pourcentage de module à jour
+- [x] 💯 Pourcentage de modules à jour
 - [ ] ⬇️ Téléchargement des plugins directement depuis l’extension
 - [ ] 🎨 Amélioration de l’interface utilisateur
 
