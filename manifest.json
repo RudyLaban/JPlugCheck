@@ -20,7 +20,7 @@
   "web_accessible_resources": [
     {
       "resources": [ 
-        "images/clear/icon_clear-16.png"
+        "images/clear/icon_clear-32.png"
       ],
       "matches": [ 
         "<all_urls>"

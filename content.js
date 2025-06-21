@@ -43,42 +43,38 @@
       else if (rate < 80) {
         rateClass = "medium";
       }
-      const thRate = document.querySelector(".jpc-th .rate");
-      thRate.setAttribute("title", "Pourcentage de modules à jours.")
-      thRate.classList.add(rateClass);
-      thRate.append(rate + '%');
+
+      document.querySelector(".jpc-th").innerHTML += `
+        <span class="rate ${rateClass}" title="Pourcentage de modules à jours.">${rate}%</span>
+      `;
+
 
       // message au service worker
       chrome.runtime.sendMessage({ type: "contentScriptFinished" });
     }
   };
     
-	// Cellule d'entête
-  const thead = document.querySelector(".table-data > thead > tr");
-  const th = document.createElement("th");
-  const labelWrapper = document.createElement("span");
-  const thImg = document.createElement("img");
-  const spanRate = document.createElement("span");
-  
-  thImg.src = chrome.runtime.getURL('images/clear/icon_clear-16.png');
-  labelWrapper.classList.add('label-wrapper')
-  labelWrapper.append(thImg, " Rapport");
-  spanRate.classList.add('rate');
-  th.classList.add('jpc-th')
-  th.append(labelWrapper, spanRate);
-  thead.appendChild(th);
+  // Cellule d'entête
+  document.querySelector(".table-data > thead > tr").innerHTML += `
+    <th class="jpc-th">
+      <span class="label-wrapper">
+        <img src="${chrome.runtime.getURL('images/clear/icon_clear-32.png')}" />
+        <span>Rapport</span>
+      </span>
+    </th>
+  `;
 
   rows.forEach((row, index) => {
     // Nouvelle cellule pour cette ligne
     const cell = document.createElement("td");
-    cell.classList.add("jplugcheck-indicator");
+    cell.classList.add("jpc-indicator");
 
     const pluginName = row.querySelector("td:nth-child(5) a")?.textContent?.trim();
     const link = row.querySelector("td:nth-child(8) a");
 
     // Gère les différents cas de non-traitement ou d'erreur
     const handleNoData = (reason) => {
-			console.debug(`[JPlugCheck] ${reason}`)
+      console.debug(`[JPlugCheck] ${reason}`)
       signalPluginProcessed();
       // Ajoute la cellule vide
       row.appendChild(cell);
@@ -154,19 +150,19 @@
         // Compare les versions
         const toUpdate = isNewerVersion(cleanLast, cleanLocal);
 
-        // Remplis la cellule avec le statut et le style approprié
+        // Remplis la cellule avec le statut
         if (toUpdate) {
           if (isPatch) {
             cell.textContent = `🩹 Nouveau Patch : ${cleanLast}`;
-            cell.style.backgroundColor = "#009ef517";
+            cell.classList.add("patch");
           } else {
-            cell.textContent = `⚠️ Nouvelle version : ${cleanLast}`;
-            cell.style.backgroundColor = "#ff000017";
+            cell.textContent = `❌ Nouvelle version : ${cleanLast}`;
+            cell.classList.add("to-update");
           }
         } else {
-          nbPluginUpTodate++;
           cell.textContent = `✅ À jour en version ${cleanLast}`;
-          cell.style.backgroundColor = "#00c80017";
+          cell.classList.add("up-to-date");
+          nbPluginUpTodate++;
         }
 
         row.appendChild(cell);

@@ -1,6 +1,6 @@
 /**
  * Vérifie si le controle des versions a déjà été lancée 
- * en verifiant l'existance d'un élément ayant la classe .jplugcheck-indicator 
+ * en verifiant l'existance d'un élément ayant la classe .jpc-indicator 
  * 
  * Fonction injectée et exécutée dans le contexte du content script
  * 
@@ -8,7 +8,7 @@
  */
 function checkIfElementExists() {
   // On accède ici au DOM de la page courante
-  const element = document.querySelector(".table-data > tbody > tr td.jplugcheck-indicator");
+  const element = document.querySelector(".table-data > tbody > tr td.jpc-indicator");
   return !!element;
 }
 
