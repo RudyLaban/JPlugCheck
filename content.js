@@ -135,10 +135,9 @@
     
   // Cellule d'entête
   document.querySelector(".table-data > thead > tr").innerHTML += `
-    <th class="jpc jpc-th">
+    <th class="jpc jpc-th" title="Inclut uniquement les modules présents sur Community.">
       <span class="label-wrapper">
-        <img src="${chrome.runtime.getURL('images/clear/icon_clear-32.png')}" />
-        <span>Rapport</span>
+        <span>Modules à jour</span>
       </span>
     </th>
   `;
