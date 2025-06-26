@@ -4,13 +4,14 @@
 
 ### Feats
 
+- [Indicateur de compatibilité module/JPlatform]()
 - [Pourcentage de modules à jour]()
-- [Injection d'une feuille css pour retrait des styles au sein du JS]()
 
 ### Changes
 
-- [[CHG] Déport total des style vers la feuille css + Optimisation th]()
-- [[DOC] Chrome - Ajout du lien de l'extension](https://github.com/RudyLaban/JPlugCheck/commit/b2da38d61deceb9c79580cbdc6f7b9ce2f17ea73)
+- [Déport total des style vers la feuille css + Optimisation th]()
+- [Injection d'une feuille css pour retrait des styles au sein du JS]()
+- [Chrome - Ajout du lien de l'extension](https://github.com/RudyLaban/JPlugCheck/commit/b2da38d61deceb9c79580cbdc6f7b9ce2f17ea73)
 - [Reformulation et ajout à la doc](https://github.com/RudyLaban/JPlugCheck/commit/4e745b2c961f56fbf491764aa33620000c9ac819)
 
 ---

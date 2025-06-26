@@ -26,7 +26,7 @@ Elle met en évidence les **plugins nécessitant une mise à jour**, directement
 - **Comparaison automatique :** compare la version en ligne avec la version installée.
 - **Indicateurs visuels clairs :** affiche dans le tableau un symbole :
   - ✅ À jour en version x.y.z
-  - ⚠️ Nouvelle version : x.y.z
+  - ❌ Nouvelle version : x.y.z
   - 🩹 Nouveau Patch : x.y-zzz
 - **Fonctionnement ciblé :** le lancement n'est possible que depuis la page de gestion des modules.
 
@@ -83,7 +83,7 @@ git clone https://github.com/RudyLaban/JPlugCheck.git
   - [ ] Edge
   - [ ] Firefox
 - [x] 🩹 Inclusion du PatchPlugin au rapport
-- [ ] ℹ️ Indication sur la compatibilité d'un nouveau module avec la version de JPlatform
+- [x] ℹ️ Indication sur la compatibilité d'un nouveau module avec la version de JPlatform
 - [x] 💯 Pourcentage de modules à jour
 - [ ] ⬇️ Téléchargement des plugins directement depuis l’extension
 - [ ] 🎨 Amélioration de l’interface utilisateur

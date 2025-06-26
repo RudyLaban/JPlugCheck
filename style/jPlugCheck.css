@@ -1,5 +1,4 @@
-/* .jpc-th  */
-.jpc-th {
+.jpc.jpc-th {
     display: flex;
     justify-content: space-between;
 
@@ -30,14 +29,22 @@
         background-color: #ff000026;
         color: #960000;
     }
-}/* .jpc-th */
+}/* .jpc.jpc-th */
 
-.jpc-indicator {
+.jpc.jpc-indicator {
     &.patch {
         background-color: #009ef517;
     }
     &.to-update {
         background-color: #ff000017;
+    }
+    &.not-compatible {
+        background-color: rgba(255, 162, 0, 0.13);
+        cursor: help;
+        &::after {
+            content: "⚠️";
+            float: right;
+        }
     }
     &.up-to-date {
         background-color: #00c80017;

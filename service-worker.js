@@ -24,6 +24,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     return true; // Nécessaire pour permettre une réponse asynchrone avec sendResponse()
   }
+  // content.js -> fetch vers infos site courant
+  if (request.type === "fetchCurrentSiteInfo" && request.url) {
+    // Effectue une requête fetch avec les cookies (credentials: 'include')
+    fetch(request.url, { method: "GET", credentials: "include" })
+      .then(res => res.text())
+      .then(html => sendResponse({ success: true, html }))
+      .catch(err => sendResponse({ success: false, error: err.message }));
+
+    return true; // Nécessaire pour permettre une réponse asynchrone avec sendResponse()
+  }
 
   // popup.js -> Si le messages demande de recuperer un élément du DOM
   if (request.action === "getPageDomElement") {

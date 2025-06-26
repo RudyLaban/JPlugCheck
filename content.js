@@ -2,7 +2,7 @@
  * Fonctionnement principal de l'extension pour la vérification des modules
  * et les insertions des indications dans le DOM
  */
-(() => {
+(async () => {
   // Compare deux versions de type "x.y.z" ou "x.y-z"
   function isNewerVersion(lastVersion, localVersion) {
     const lastParts = lastVersion.split(/[.-]/).map(Number);
@@ -20,14 +20,94 @@
     return false; // identiques ou déjà à jour
   }
 
+  /**
+   * Parse la string de compatibilité récupérée sur la page du module
+   * @param str La version compatible (ex : JPlatform 10 SP8)
+   * @returns La version parsée sous forme d'objet
+   */  
+  function parseCompatibility(str) {
+    const parts = str.trim().split(/\s+/);
+    // Gère le cas ou les versions mineur et corrective ne sont pas indiquées
+    let major = 0, minor = null, fix = null;
+
+    if (parts.length >= 2) {
+      major = parseInt(parts[1], 10);
+    }
+
+    if (parts.length >= 3) {
+      if (/^SP\d+$/i.test(parts[2])) {
+        fix = parseInt(parts[2].slice(2), 10);
+      } else if (!isNaN(parts[2])) {
+        minor = parseInt(parts[2], 10);
+      }
+    }
+
+    return { major, minor, fix };
+  }
+
+  /**
+   * Parse la version de JPlatform locale
+   * @param str La version, récupérée depuis le patch plugin
+   * @returns La version parsée sous forme d'objet
+   */  
+  function parseLocalJPlatformVersionFromPatch(versionString) {
+    const parts = versionString.split('.').map(n => parseInt(n, 10));
+    return {
+      major: parts[0] || 0,
+      minor: parts[1] || 0,
+      fix: parts[2] || 0
+    };
+  }
+
+  /**
+   * Récupère la version de JPlatform locale depuis la page "État du site"
+   * @returns 
+   */
+  function fetchCurrentJPlatformVersion() {
+
+    const currentUrl = window.location.href;
+    const sitInfoUrl = currentUrl.replace(/[^/]+\.jsp$/, "siteInfo.jsp");
+    
+    return new Promise((resolve, reject) => {
+      // Appel au service worker
+      chrome.runtime.sendMessage(
+        { type: "fetchCurrentSiteInfo", url: sitInfoUrl},
+        (response) => {
+
+          if (!response || !response.success) {
+            handleNoData(`Échec du fetch de la page siteInfo du Jplatform courant`);
+            resolve(null); 
+            // TODO: ou resolve(reject) pour gérer l'erreur autrement
+            return;
+          }
+
+          const parser = new DOMParser();
+          const docSiteInfo = parser.parseFromString(response.html, "text/html");
+          let versionElmt = docSiteInfo.querySelector('#server .table-data tr td:nth-child(2)');
+          if (!versionElmt) {
+            versionElmt = docSiteInfo.querySelector('.table-data tr td:nth-child(2)');
+          }
+          const match = versionElmt?.textContent?.match(/\d+\.\d+\.\d+/);
+          resolve(match);
+        }
+      );
+    });
+  }
+
   // Chaque ligne de module
   const rows = document.querySelectorAll(".table-data > tbody > tr");
-  
+
+
   const totalPlugins = rows.length;
-  let completedFetches = 0;
-  let nbPluginsCompared = 0;
-  let nbPluginUpTodate = 0;
-  let rate = 0;
+	// Contruction de la version de JPlatform locale (string)
+  const localJPlatformVersionMatch = await fetchCurrentJPlatformVersion();
+	let localJPlatformVersion = {};
+
+	if (!!localJPlatformVersionMatch) {
+		localJPlatformVersion = parseLocalJPlatformVersionFromPatch(localJPlatformVersionMatch[0]);
+	}
+
+  let completedFetches = 0, nbPluginsCompared = 0, nbPluginUpTodate = 0, rate = 0;
   
   // Lancé à chaque traitement de module pour envoyer un
   const signalPluginProcessed = () => {
@@ -48,7 +128,6 @@
         <span class="rate ${rateClass}" title="Pourcentage de modules à jours.">${rate}%</span>
       `;
 
-
       // message au service worker
       chrome.runtime.sendMessage({ type: "contentScriptFinished" });
     }
@@ -56,7 +135,7 @@
     
   // Cellule d'entête
   document.querySelector(".table-data > thead > tr").innerHTML += `
-    <th class="jpc-th">
+    <th class="jpc jpc-th">
       <span class="label-wrapper">
         <img src="${chrome.runtime.getURL('images/clear/icon_clear-32.png')}" />
         <span>Rapport</span>
@@ -67,7 +146,7 @@
   rows.forEach((row, index) => {
     // Nouvelle cellule pour cette ligne
     const cell = document.createElement("td");
-    cell.classList.add("jpc-indicator");
+    cell.classList.add("jpc", "jpc-indicator");
 
     const pluginName = row.querySelector("td:nth-child(5) a")?.textContent?.trim();
     const link = row.querySelector("td:nth-child(8) a");
@@ -131,6 +210,42 @@
           return;
         }
 
+        // Récupération des compatibilitées
+        // Récupère la version de JPlatform via le numéro de patch
+        const propNameCompatibility = Array.from(doc.querySelectorAll('.property-name')).find(c => {
+        	return c.textContent.trim() === "Compatibilité  :";
+        });
+
+				let isCompatible = false;
+				if (!!propNameCompatibility && !!localJPlatformVersion) {
+
+					const compatibilitiesContent = Array.from(propNameCompatibility.parentNode.children).filter(c => {
+						return c !== propNameCompatibility;
+					});
+					let compatibilities = [];
+					compatibilitiesContent.forEach((c) => {
+						compatibilities.push(parseCompatibility(c.textContent));
+					});
+					
+					// Gère le cas ou les versions mineur et corrective ne sont pas indiquées 
+					isCompatible = compatibilities.some(compat => {
+						if (compat.major !== localJPlatformVersion.major) {
+							return false;
+						}
+
+						if (compat.minor !== null && compat.minor !== localJPlatformVersion.minor) {
+							return false;
+						}
+
+						if (compat.fix !== null && compat.fix !== localJPlatformVersion.fix) {
+							return false;
+						}
+
+						return true;
+					});
+				}
+
+
         // Extraie la version installée en locale
         const localCellContent = row.querySelector("td:nth-child(4)");
         let localVersion = "0.0.0";
@@ -156,8 +271,9 @@
             cell.textContent = `🩹 Nouveau Patch : ${cleanLast}`;
             cell.classList.add("patch");
           } else {
-            cell.textContent = `❌ Nouvelle version : ${cleanLast}`;
-            cell.classList.add("to-update");
+            cell.innerHTML += `❌ Nouvelle version : ${cleanLast}`;
+						cell.setAttribute("title", isCompatible ? "" : "Possible incompatibilité avec votre version de JPlatform.")
+            cell.classList.add(isCompatible ? 'to-update' : 'not-compatible');
           }
         } else {
           cell.textContent = `✅ À jour en version ${cleanLast}`;
