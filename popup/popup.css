@@ -1,5 +1,5 @@
 BODY {
-    min-width: 180px;
+    min-width: 230px;
     font-family: Tahoma, sans-serif;
     font-size: 14px;
     margin: 46px 16px 12px 16px;
@@ -89,4 +89,36 @@ button#fetch-btn.disabled {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.jpc-legends .legend {
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px lightgray solid;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+}
+.jpc-legends .legend .label {
+    font-size: 13px;
+    width: 80%;
+}
+.jpc-legends .legend .label SPAN {
+    font-weight: 600;
+}
+.jpc-legends .legend .render {
+    width: 20%;
+    text-align: center;
+    padding: 8px 0;
+}
+.jpc-legends .legend .render.up-to-date {
+    background-color: rgba(0, 200, 0, 0.09);
+}
+.jpc-legends .legend .render.to-updated {
+    background-color: rgba(255, 0, 0, 0.09);
+}
+.jpc-legends .legend .render.not-compatible {
+    background-color: rgba(255, 162, 0, 0.13);
+}
+.jpc-legends .legend .render.patch {
+    background-color: rgba(0, 158, 245, 0.09);
 }

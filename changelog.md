@@ -4,6 +4,7 @@
 
 ### Feats
 
+- [Ajout de légendes à la popup]()
 - [Indicateur de compatibilité module/JPlatform]()
 - [Pourcentage de modules à jour]()
 
