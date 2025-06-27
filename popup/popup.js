@@ -20,6 +20,15 @@ function hideAllBlocks() {
 }
 
 /**
+ * Désactive les actions disponibles sur la popup
+ */
+function disablePopupActions () {
+  fetchBtn.setAttribute("disabled", "true");
+  fetchBtn.classList.add("disabled");
+  loader.style.display = "inline-block";
+}
+
+/**
  * Orchestre l'initialisation de l'interface utilisateur de la popup.
  * Gère l'affichage basé sur l'URL et l'état de l'indicateur dans la page.
  */
@@ -46,27 +55,36 @@ async function initializePopupUI() {
 }
 
 /**
- * Vérifie l'existence de l'élément indicateur sur la page courante
+ * Vérifie l'existence des l'éléments indicateur sur la page courante
  * affiche le bloc principal ou le bloc "check-is-done" en conséquence.
  */
 async function checkDomElementAndDisplayBlocs() {
   try {
     legends.style.display = "block";
-    const response = await chrome.runtime.sendMessage({ action: "getPageDomElement" });
+    const response = await chrome.runtime.sendMessage({ action: "getPageDomElements" });
     console.log("Réponse du service worker (checkDomElementAndDisplayBlocs):", response);
 
-    if (response && response.elementExists) {
-      // Si l'élément existe, c'est que la vérification a déjà été faite
-      blocDone.style.display = "block";
-      blocMain.style.display = "none";
-      fetchBtn.removeAttribute("disabled");
-      fetchBtn.classList.remove("disabled");
-    } else {
-      // Sinon, on affiche le bloc principal pour lancer la vérification
-      blocMain.style.display = "block";
-      blocDone.style.display = "none";
-      fetchBtn.removeAttribute("disabled");
-      fetchBtn.classList.remove("disabled");
+    if (response) {
+      const checkStart = response.elementsExists.firstElement && !response.elementsExists.lastElement;
+      const checkStartAndDone = response.elementsExists.firstElement && response.elementsExists.lastElement;
+      if (checkStartAndDone) {
+        // Si les éléments existent, c'est que la vérification est terminé
+        blocMain.style.display = "none";
+        blocDone.style.display = "block";
+      } else if(checkStart) {
+        // Si au moins le 1er élément existe (jpc-th), c'est que la vérification est en cours
+        // on affiche le bloc principal en desactivant les actions
+        blocMain.style.display = "block";
+        blocDone.style.display = "none";
+        disablePopupActions();
+      }
+      else {
+        // Sinon, on affiche le bloc principal pour lancer la vérification
+        blocMain.style.display = "block";
+        blocDone.style.display = "none";
+        fetchBtn.removeAttribute("disabled");
+        fetchBtn.classList.remove("disabled");
+      }
     }
   } catch (e) {
     console.error("Erreur lors de la vérification de l'élément DOM :", e);
@@ -81,9 +99,7 @@ async function checkDomElementAndDisplayBlocs() {
 
 // Écoute du clic sur le bouton de la popup
 fetchBtn.addEventListener("click", () => {
-  fetchBtn.setAttribute("disabled", "true");
-  fetchBtn.classList.add("disabled");
-  loader.style.display = "inline-block";
+  disablePopupActions();
 
   // Récupère l'onglet actif dans la fenêtre actuelle
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -106,9 +122,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "processingCompleted") {
     blocDone.style.display = "block";
     blocMain.style.display = "none";
-    loader.style.display = "none";
-    fetchBtn.removeAttribute("disabled");
-    fetchBtn.classList.remove("disabled");
   }
 });
 

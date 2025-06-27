@@ -1,15 +1,16 @@
 /**
  * Vérifie si le controle des versions a déjà été lancée 
- * en verifiant l'existance d'un élément ayant la classe .jpc-indicator 
+ * Se base sur le 1er élément inseré et sur le dernier
  * 
  * Fonction injectée et exécutée dans le contexte du content script
  * 
  * @returns true si l'élément existe, sinon false
  */
-function checkIfElementExists() {
+function checkIfElementsExists() {
   // On accède ici au DOM de la page courante
-  const element = document.querySelector(".table-data > tbody > tr td.jpc-indicator");
-  return !!element;
+  const firstElement = document.querySelector(".jpc-th");
+  const lastElement = document.querySelector(".jpc-th .rate");
+  return {firstElement: !!firstElement, lastElement: !!lastElement};
 }
 
 // Écoute les messages reçus depuis content.js ou popup.js
@@ -36,26 +37,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   // popup.js -> Si le messages demande de recuperer un élément du DOM
-  if (request.action === "getPageDomElement") {
+  if (request.action === "getPageDomElements") {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
       if (tabs.length > 0) {
         const activeTabId = tabs[0].id;
 
         chrome.scripting.executeScript({
           target: { tabId: activeTabId },
-          function: checkIfElementExists
-        }, (injectionResults) => {
+          function: checkIfElementsExists
+        }, (elementsExists) => {
+          console.log(elementsExists[0].result);
           if (chrome.runtime.lastError) {
             console.error("Erreur d'injection du script :", chrome.runtime.lastError.message);
-            sendResponse({ elementExists: false, error: chrome.runtime.lastError.message });
+            sendResponse({ elementsExists: false, error: chrome.runtime.lastError.message });
             return;
           }
-          if (injectionResults && injectionResults[0] && injectionResults[0].result !== undefined) {
+          if (elementsExists && elementsExists[0] && elementsExists[0].result !== undefined) {
             // S'il est OK, récupère le résultat et l'envoyer à la popup
-            sendResponse({ elementExists: injectionResults[0].result });
+            sendResponse({ elementsExists: elementsExists[0].result });
           } else {
             // Cas où le résultat est inattendu
-            sendResponse({ elementExists: false }); 
+            sendResponse({ elementsExists: false }); 
           }
         });
       }
