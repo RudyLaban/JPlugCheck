@@ -1,6 +1,7 @@
 const blocMain = document.querySelector(".jpc-bloc#main");
 const blocError = document.querySelector(".jpc-bloc#error");
 const blocDone = document.querySelector(".jpc-bloc#check-is-done");
+const legends = document.querySelector(".jpc-legends");
 const loader = document.getElementById("loader");
 const fetchBtn = document.getElementById("fetch-btn");
 
@@ -14,6 +15,7 @@ function hideAllBlocks() {
   blocMain.style.display = "none";
   blocError.style.display = "none";
   blocDone.style.display = "none";
+  legends.style.display = "none";
   loader.style.display = "none";
 }
 
@@ -49,6 +51,7 @@ async function initializePopupUI() {
  */
 async function checkDomElementAndDisplayBlocs() {
   try {
+    legends.style.display = "block";
     const response = await chrome.runtime.sendMessage({ action: "getPageDomElement" });
     console.log("Réponse du service worker (checkDomElementAndDisplayBlocs):", response);
 

@@ -267,15 +267,15 @@
         // Remplis la cellule avec le statut
         if (toUpdate) {
           if (isPatch) {
-            cell.textContent = `🩹 Nouveau Patch : ${cleanLast}`;
+            cell.textContent = `🩹 ${cleanLast}`;
             cell.classList.add("patch");
           } else {
-            cell.innerHTML += `❌ Nouvelle version : ${cleanLast}`;
+            cell.innerHTML += `❌ ${cleanLast}`;
 						cell.setAttribute("title", isCompatible ? "" : "Possible incompatibilité avec votre version de JPlatform.")
             cell.classList.add(isCompatible ? 'to-update' : 'not-compatible');
           }
         } else {
-          cell.textContent = `✅ À jour en version ${cleanLast}`;
+          cell.textContent = `✅ ${cleanLast}`;
           cell.classList.add("up-to-date");
           nbPluginUpTodate++;
         }
