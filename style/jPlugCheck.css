@@ -28,19 +28,31 @@
 .jpc.jpc-indicator {
     &.patch {
         background-color: #009ef517;
+        &::before {
+            content: "🩹 ";
+        }
     }
     &.to-update {
         background-color: #ff000017;
+        &::before {
+            content: "❌ ";
+        }
     }
     &.not-compatible {
         background-color: rgba(255, 162, 0, 0.13);
         cursor: help;
+        &::before {
+            content: "❌ ";
+        }
         &::after {
             content: "⚠️";
             float: right;
         }
     }
     &.up-to-date {
+        &::before {
+            content: "✅ ";
+        }
         background-color: #00c80017;
     }
 }

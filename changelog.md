@@ -4,12 +4,13 @@
 
 ### Feats
 
-- [Ajout de légendes à la popup]()
+- [Ajout d'une légende à la popup]()
 - [Indicateur de compatibilité module/JPlatform]()
 - [Pourcentage de modules à jour]()
 
 ### Changes
 
+- [Ajustement du rapport suite à ajout légende]()
 - [Modif cellule d'entête]()
 - [Déport total des style vers la feuille css + Optimisation th]()
 - [Injection d'une feuille css pour retrait des styles au sein du JS]()

@@ -137,7 +137,7 @@
   document.querySelector(".table-data > thead > tr").innerHTML += `
     <th class="jpc jpc-th" title="Inclut uniquement les modules présents sur Community.">
       <span class="label-wrapper">
-        <span>Modules à jour</span>
+        <span>Dernière version</span>
       </span>
     </th>
   `;
@@ -267,19 +267,17 @@
         // Remplis la cellule avec le statut
         if (toUpdate) {
           if (isPatch) {
-            cell.textContent = `🩹 Nouveau Patch : ${cleanLast}`;
             cell.classList.add("patch");
           } else {
-            cell.innerHTML += `❌ Nouvelle version : ${cleanLast}`;
 						cell.setAttribute("title", isCompatible ? "" : "Possible incompatibilité avec votre version de JPlatform.")
             cell.classList.add(isCompatible ? 'to-update' : 'not-compatible');
           }
         } else {
-          cell.textContent = `✅ À jour en version ${cleanLast}`;
           cell.classList.add("up-to-date");
           nbPluginUpTodate++;
         }
-
+        
+        cell.textContent = `${cleanLast}`;
         row.appendChild(cell);
         signalPluginProcessed();
       }
