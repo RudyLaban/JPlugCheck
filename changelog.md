@@ -4,6 +4,7 @@
 
 ### Feats
 
+- [Ajout du lien de téléchargement du module]()
 - [Ajout d'une légende à la popup]()
 - [Indicateur de compatibilité module/JPlatform]()
 - [Pourcentage de modules à jour]()

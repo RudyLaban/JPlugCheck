@@ -91,6 +91,27 @@ button#fetch-btn.disabled {
     100% { transform: rotate(360deg); }
 }
 
+#choice-dl-link {
+    margin-top: 8px;
+}
+#choice-dl-link INPUT {
+    margin-top: 2px;
+    margin-bottom: 0;
+}
+#choice-dl-link LABEL {
+    font-size: 13px;
+    color: black;
+    vertical-align: top;
+}
+#choice-dl-link LABEL.disabled {
+    opacity: .45;
+}
+
+.jpc-legends P {
+    text-align: center;
+    font-weight: 600;
+    margin: 7px 0;
+}
 .jpc-legends .legend {
     display: flex;
     gap: 10px;
@@ -110,15 +131,18 @@ button#fetch-btn.disabled {
     text-align: center;
     padding: 8px 0;
 }
-.jpc-legends .legend .render.up-to-date {
+.jpc-legends .legend.up-to-date .render {
     background-color: rgba(0, 200, 0, 0.09);
 }
-.jpc-legends .legend .render.to-updated {
+.jpc-legends .legend.to-updated .render {
     background-color: rgba(255, 0, 0, 0.09);
 }
-.jpc-legends .legend .render.not-compatible {
+.jpc-legends .legend.not-compatible .render {
     background-color: rgba(255, 162, 0, 0.13);
 }
-.jpc-legends .legend .render.patch {
+.jpc-legends .legend.patch .render {
     background-color: rgba(0, 158, 245, 0.09);
+}
+.jpc-legends .legend.download {
+    display: none;
 }

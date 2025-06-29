@@ -1,8 +1,18 @@
+// popup.js -> 
+// Attend le déclenchement de l'exécution
+// Permet de recevoir showDlLink de popup.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "startProcessing") {
+    const showDlLink = message.showDlLink || false;
+    startPluginCheck(showDlLink);
+  }
+});
+
 /**
  * Fonctionnement principal de l'extension pour la vérification des modules
  * et les insertions des indications dans le DOM
  */
-(async () => {
+async function startPluginCheck(showDlLink) {
   // Compare deux versions de type "x.y.z" ou "x.y-z"
   function isNewerVersion(lastVersion, localVersion) {
     const lastParts = lastVersion.split(/[.-]/).map(Number);
@@ -244,6 +254,16 @@
 					});
 				}
 
+        // Récupération distante : lien de téléchargement
+        let dlUrl = "";
+        if (showDlLink) {
+          const dlSelector = isPatch ? '.main-actions a' : '.header-button a'
+          const dlElmnt = doc.querySelector(dlSelector);
+
+          if (!!dlElmnt) {
+            dlUrl = dlElmnt.href;
+          }
+        }
 
         // Extraie la version installée en locale
         const localCellContent = row.querySelector("td:nth-child(4)");
@@ -276,11 +296,21 @@
           cell.classList.add("up-to-date");
           nbPluginUpTodate++;
         }
-        
         cell.textContent = `${cleanLast}`;
+
+        // Ajout du lien de téléchargement du module
+        if(dlUrl.length !== 0) {
+          const dlLink = document.createElement("a");
+          dlLink.href = dlUrl;
+          dlLink.classList.add("dl-link");
+          dlLink.setAttribute("title", `Télécharger la version ${cleanLast +" du "+ pluginName}`);
+          dlLink.textContent = "💾";
+          cell.appendChild(dlLink);
+        }
+        
         row.appendChild(cell);
         signalPluginProcessed();
       }
     );
   });
-})();
+}

@@ -55,4 +55,8 @@
         }
         background-color: #00c80017;
     }
+
+    .dl-link {
+        float: right;
+    }
 }

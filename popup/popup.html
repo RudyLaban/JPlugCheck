@@ -21,6 +21,10 @@
         Lancer
       </button>
       <span id="loader" class="loader" style="display: none;"></span>
+      <div id="choice-dl-link" title="Inclure les liens de téléchargement de modules au rapport.">
+        <input type="checkbox" id="show-dl-link" name="show-dl-link" value="true">
+        <label for="show-dl-link">Liens de téléchargement 💾</label> 
+      </div>
     </div>
   </div>
   <!-- Bloc erreur -->
@@ -35,21 +39,27 @@
   <!-- Légendes -->
   <div class="jpc-legends">
     <hr>
-    <div class="legend">
-      <span class="render up-to-date">✅</span>
+    <p>Légende</p>
+    <hr>
+    <div class="legend up-to-date">
+      <span class="render">✅</span>
       <span class="label">Le module dispose déjà de la dernière version disponible</span>
     </div> 
-    <div class="legend">
-      <span class="render to-updated">❌</span>
+    <div class="legend to-updated">
+      <span class="render">❌</span>
       <span class="label">Nouvelle version du module disponible</span>
     </div>
-    <div class="legend">
-      <span class="render not-compatible">❌⚠️</span>
+    <div class="legend not-compatible">
+      <span class="render">❌⚠️</span>
       <span class="label">Nouvelle version disponible. <span>Risque d'incompatibilité</span></span>
     </div>
-    <div class="legend">
-      <span class="render patch">🩹</span>
+    <div class="legend patch">
+      <span class="render">🩹</span>
       <span class="label">Nouveau module de patch disponible</span>
+    </div>
+    <div class="legend download">
+      <span class="render">💾</span>
+      <span class="label">Télécharger la nouvelle version du module</span>
     </div>
   </div>
 

@@ -2,8 +2,12 @@ const blocMain = document.querySelector(".jpc-bloc#main");
 const blocError = document.querySelector(".jpc-bloc#error");
 const blocDone = document.querySelector(".jpc-bloc#check-is-done");
 const legends = document.querySelector(".jpc-legends");
+const legendDl = legends.querySelector(".download");
 const loader = document.getElementById("loader");
 const fetchBtn = document.getElementById("fetch-btn");
+const showDlLinkCheckbox = document.getElementById("show-dl-link");
+const showDlLinkLabel = document.querySelector("#choice-dl-link label");
+
 
 // URL de la page de gestion des modules Jalios
 const JALIOS_PLUGIN_MANAGER_URL_PART = "/admin/pluginManager.jsp";
@@ -26,6 +30,8 @@ function disablePopupActions () {
   fetchBtn.setAttribute("disabled", "true");
   fetchBtn.classList.add("disabled");
   loader.style.display = "inline-block";
+  showDlLinkCheckbox.setAttribute("disabled", "true");
+  showDlLinkLabel.classList.add("disabled");
 }
 
 /**
@@ -100,6 +106,7 @@ async function checkDomElementAndDisplayBlocs() {
 // Écoute du clic sur le bouton de la popup
 fetchBtn.addEventListener("click", () => {
   disablePopupActions();
+  const showDlLink = showDlLinkCheckbox.checked;
 
   // Récupère l'onglet actif dans la fenêtre actuelle
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -108,6 +115,12 @@ fetchBtn.addEventListener("click", () => {
     chrome.scripting.executeScript({
       target: { tabId: tabId },
       files: ["content.js"]
+    }, () => {
+      // -> contnt.js - Execute content.js en lui passant showDlLink
+      chrome.tabs.sendMessage(tabId, {
+        type: "startProcessing",
+        showDlLink: showDlLink
+      })
     });
     // Injecter le CSS
     chrome.scripting.insertCSS({
@@ -116,6 +129,15 @@ fetchBtn.addEventListener("click", () => {
     })
   });
 });
+
+// Affiche la légende pour l'icone de téléchargement
+showDlLinkCheckbox.addEventListener('change', function(event) {
+    if (showDlLinkCheckbox.checked) {
+      legendDl.style.display = 'flex';
+    } else {
+      legendDl.style.display = 'none';
+    }
+  });
 
 // Écoute les messages venant de n'importe quel script de l'extension (y compris le service worker)
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
