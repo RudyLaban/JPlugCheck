@@ -42,11 +42,7 @@
         background-color: rgba(255, 162, 0, 0.13);
         cursor: help;
         &::before {
-            content: "❌ ";
-        }
-        &::after {
-            content: "⚠️";
-            float: right;
+            content: "⚠️ ";
         }
     }
     &.up-to-date {
