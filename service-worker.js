@@ -10,7 +10,8 @@ function checkIfElementsExists() {
   // On accède ici au DOM de la page courante
   const firstElement = document.querySelector(".jpc-th");
   const lastElement = document.querySelector(".jpc-th .rate");
-  return {firstElement: !!firstElement, lastElement: !!lastElement};
+  const showDlLinks = document.querySelector(".show-dl-links");
+  return {firstElement: !!firstElement, lastElement: !!lastElement, showDlLinks: !!showDlLinks};
 }
 
 // Écoute les messages reçus depuis content.js ou popup.js

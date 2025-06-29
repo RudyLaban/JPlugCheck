@@ -5,7 +5,7 @@ const legends = document.querySelector(".jpc-legends");
 const legendDl = legends.querySelector(".download");
 const loader = document.getElementById("loader");
 const fetchBtn = document.getElementById("fetch-btn");
-const showDlLinkCheckbox = document.getElementById("show-dl-link");
+const showDlLinkCheckbox = document.getElementById("show-dl-links");
 const showDlLinkLabel = document.querySelector("#choice-dl-link label");
 
 
@@ -32,6 +32,18 @@ function disablePopupActions () {
   loader.style.display = "inline-block";
   showDlLinkCheckbox.setAttribute("disabled", "true");
   showDlLinkLabel.classList.add("disabled");
+}
+
+/**
+ * Affiche ou masque la légende "download" 
+ * @param {boolean} show 
+ */
+function showDlLegend(show) {
+  if (show) {
+    legendDl.style.display = 'flex';
+  } else {
+    legendDl.style.display = 'none';
+  }
 }
 
 /**
@@ -73,6 +85,9 @@ async function checkDomElementAndDisplayBlocs() {
     if (response) {
       const checkStart = response.elementsExists.firstElement && !response.elementsExists.lastElement;
       const checkStartAndDone = response.elementsExists.firstElement && response.elementsExists.lastElement;
+      const checkShowDlLinks = response.elementsExists.showDlLinks;
+      showDlLegend(checkShowDlLinks);
+
       if (checkStartAndDone) {
         // Si les éléments existent, c'est que la vérification est terminé
         blocMain.style.display = "none";
@@ -132,11 +147,7 @@ fetchBtn.addEventListener("click", () => {
 
 // Affiche la légende pour l'icone de téléchargement
 showDlLinkCheckbox.addEventListener('change', function(event) {
-    if (showDlLinkCheckbox.checked) {
-      legendDl.style.display = 'flex';
-    } else {
-      legendDl.style.display = 'none';
-    }
+    showDlLegend(showDlLinkCheckbox.checked);
   });
 
 // Écoute les messages venant de n'importe quel script de l'extension (y compris le service worker)

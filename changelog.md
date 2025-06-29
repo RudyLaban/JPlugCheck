@@ -11,6 +11,7 @@
 
 ### Changes
 
+- [Affiche ou masque la légende "download" ]()
 - [Màj UI - Harmonise l'intégration du lien de DL]()
 - [Ajustement du rapport suite à ajout légende]()
 - [Modif cellule d'entête]()

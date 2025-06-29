@@ -145,7 +145,7 @@ async function startPluginCheck(showDlLink) {
     
   // Cellule d'entête
   document.querySelector(".table-data > thead > tr").innerHTML += `
-    <th class="jpc jpc-th" title="Inclut uniquement les modules présents sur Community.">
+    <th class="jpc jpc-th ${showDlLink ? "show-dl-links" : ""}" title="Inclut uniquement les modules présents sur Community.">
       <span class="label-wrapper">
         <span>Dernière version</span>
       </span>
