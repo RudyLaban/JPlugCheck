@@ -1,5 +1,9 @@
+HTML {
+    background-color: #fbfbfb;
+}
+
 BODY {
-    min-width: 230px;
+    min-width: 280px;
     font-family: Tahoma, sans-serif;
     font-size: 14px;
     margin: 46px 16px 12px 16px;
@@ -16,8 +20,8 @@ BODY HEADER {
     right: 0;
     width: 100%;
     padding: 6px 8px;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #ddd;
+    background-color: #efefef;
+    border-bottom: 1px solid #c3c3c3;
 
     img {
         height: 20px;
@@ -114,7 +118,7 @@ button#fetch-btn.disabled {
 }
 .jpc-legends .legend {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     border-bottom: 1px lightgray solid;
     margin-bottom: 8px;
     padding-bottom: 5px;
@@ -143,6 +147,23 @@ button#fetch-btn.disabled {
 .jpc-legends .legend.patch .render {
     background-color: rgba(0, 158, 245, 0.09);
 }
-.jpc-legends .legend.download {
+
+.jpc-legends .legend-box {
+    background-color: #ffffff;
+    padding: 9px 10px 1px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    border-radius: 4px;
+}
+.jpc-legends .legend-box .label-warn {
+    font-size: 13px;
+    font-weight: 600;
+    color: red;
+    justify-content: center;
+}
+
+.jpc-legends .legend-box .legend {
+    margin-bottom: 7px;
+}
+.jpc-legends .legend-box .download {
     display: none;
 }
