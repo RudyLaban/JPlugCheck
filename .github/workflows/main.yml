@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir dist
           zip -r "dist/jplugcheck-${GITHUB_REF_NAME}.zip" . \
-            -x LICENSE.txt README.md changelog.md .github/\*
+            -x LICENSE.txt README.md changelog.md .github/\* .git/\*
 
       - name: Upload ZIP to GitHub release
         uses: softprops/action-gh-release@v1
