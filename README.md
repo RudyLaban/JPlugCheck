@@ -63,7 +63,7 @@ git clone https://github.com/RudyLaban/JPlugCheck.git
 
 **Ou via ZIP :**
 
-1. Cliquer sur le bouton `Code` puis sur `Download ZIP`
+1. Récpérer le zip de la [dernière release](https://github.com/RudyLaban/JPlugCheck/releases/download/1.2/jplugcheck-1.2.zip)
 2. Extraire le dossier sur votre ordinateur.
 
 **Installation dans le navigateur :**
