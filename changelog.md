@@ -1,14 +1,14 @@
 # CHANGELOG
 
-## 1.3 - En cours
+## 1.3 - Publiée (15.04.26)
 
 ### Feats
 
-- Export du rapport en CSV
+- [Export du rapport en CSV](https://github.com/RudyLaban/JPlugCheck/commit/253a4aeaf5b56b00f7f9548ce928f93a7d5ff5eb)
 
 ### Fixes
 
-- PatchPlugin - Récupération de version en cas de présence d'un FlashInfo
+- [PatchPlugin - Récupération de version en cas de présence d'un FlashInfo](https://github.com/RudyLaban/JPlugCheck/commit/31dc4bf6167336157f8bc681b9ee62059ec79496)
 
 ## 1.2 - Publiée (30.06.25)
 

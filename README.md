@@ -64,7 +64,7 @@ git clone https://github.com/RudyLaban/JPlugCheck.git
 
 **Ou via ZIP :**
 
-1. Récpérer le zip de la [dernière release](https://github.com/RudyLaban/JPlugCheck/releases/download/1.2/jplugcheck-1.2.zip)
+1. Récpérer le zip de la [dernière release](https://github.com/RudyLaban/JPlugCheck/releases/download/1.3/jplugcheck-1.3.zip)
 2. Extraire le dossier sur votre ordinateur.
 
 **Installation dans le navigateur :**
@@ -119,7 +119,7 @@ git clone https://github.com/RudyLaban/JPlugCheck.git
 ⚖️ Ce projet est publié sous licence **MIT**. Voir le fichier [LICENSE](LICENSE.txt).
 
 <!-- CONSTANTES -->
-[BADGE_VERSION]: https://img.shields.io/badge/version-1.2-blue.svg
+[BADGE_VERSION]: https://img.shields.io/badge/version-1.3-blue.svg
 [BADGE_CHROME]: https://img.shields.io/badge/Chrome%20Web%20Store-ready-blue.svg?logo=google-chrome
 [BADGE_EDGE]: https://img.shields.io/badge/Edge%20Add--on-soon-orange.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAexJREFUSEutVcFxwjAQXGVIH/CGzNgVYFUSqMS4EqASORXYM4E3pA4Iik/SOUKWbZjEn2SQdLt7t3cnMPAlqppegZW9IpYAMg2cBXC2f/XXBNjVMj33hRGxg9/AIh8iQGcMKKD3nzLdhfc7AAtVZQ1bNRY4fq6Lg0w3/tkdwN+C27Ck6CiTGYO0AP8RnINqYHeUydpUjn+cq/okgKmfV/f/lH9/Lm02XQbgTVWrG0T+Al3ECsVF1xDvj4JxqgwApecg09JzD1myzekL9AcBP+Mu97owAPTwApE3/nae7ybD+X5Psheq2gDjFm76pnQKarJlNpxjXXBTWSViO/bGkJqrevsA8zWl0CfwqOsIoHVPT/PIMDin9QpxGlJtFCxUrfsvdTvzXsXQW2PyggB68z+Bnl1db4QqyNra1iH6EftXaNkLwN1IBJynTWfyN6TcOc7UTfQzsemhQP4DBog5ybcy3xPuYqdYzaxfU3MxU5Y8NPtjuRroA+t73ykxhrGgRJqJ+J2sgjlTHmQiYyZgIOrUCdBuM2cI2ic5GYRA2mka1oKH1ZhbxnonXDjBjNGSGF4gQnW9rcO1a4sc3vQZs4o+I/hvY06j89Glz/3gJm5HyVjhowC+17+B7AaxpBXo9oHZcA0wbb8yNqd8ZT8m7T7gMXe23gAAAABJRU5ErkJggg==
 [BADGE_FIREFOX]: https://img.shields.io/badge/Firefox%20Add--on-soon-orange.svg?logo=firefoxbrowser
