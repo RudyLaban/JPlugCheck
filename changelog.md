@@ -6,6 +6,10 @@
 
 - Export du rapport en CSV
 
+### Fixes
+
+- PatchPlugin - Récupération de version en cas de présence d'un FlashInfo
+
 ## 1.2 - Publiée (30.06.25)
 
 ### Feats

@@ -281,7 +281,7 @@ async function startPluginCheck(showDlLink) {
 
         // On cherche le PatchPlugin
         if (!lastVersionContent) {
-          lastVersionTitle = doc.querySelector('.publication-title')?.textContent?.trim() || "";
+          lastVersionTitle = doc.querySelector('.FileDocument H1.publication-title')?.textContent?.trim() || "";
           lastVersion = lastVersionTitle.split(" - ").slice(1).join("-");
           isPatch = true;
         } else {// On cherche un Plugin normale
