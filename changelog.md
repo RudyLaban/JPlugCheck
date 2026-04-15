@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.3 - En cours
+
+### Feats
+
+- Export du rapport en CSV
+
 ## 1.2 - Publiée (30.06.25)
 
 ### Feats

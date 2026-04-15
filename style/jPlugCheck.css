@@ -1,28 +1,40 @@
 .jpc.jpc-th {
-    cursor: help;
     .label-wrapper {
+        cursor: help;
         display: inline-block;
     }
 
-    .rate {
+    .icons-wrapper {
         float: right;
-        padding: 0px 7px;
-        border-radius: 3px;
-        box-shadow: rgba(0, 0, 0, 0.15) 1.6px 1.6px 2.6px;
-        cursor: help;
+        .jpc-export-btn {
+            margin-right: 5px;
+            cursor: pointer;
+            &:active {
+                transform: translateY(1px);
+                box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
+            }
+        }
+
+        .rate {
+            padding: 0px 7px;
+            border-radius: 3px;
+            box-shadow: rgba(0, 0, 0, 0.15) 1.6px 1.6px 2.6px;
+            cursor: help;
+        }
+        .rate.good {
+            background-color: #00c80026;
+            color: #005d00;
+        }
+        .rate.medium {
+            background-color: #ffa60040;
+            color: #6c4600;
+        }
+        .rate.bad {
+            background-color: #ff000026;
+            color: #960000;
+        }
     }
-    .rate.good {
-        background-color: #00c80026;
-        color: #005d00;
-    }
-    .rate.medium {
-        background-color: #ffa60040;
-        color: #6c4600;
-    }
-    .rate.bad {
-        background-color: #ff000026;
-        color: #960000;
-    }
+
 }/* .jpc.jpc-th */
 
 .jpc.jpc-indicator {

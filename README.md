@@ -33,11 +33,12 @@ Elle met en évidence les **plugins nécessitant une mise à jour**, directement
   - ❌ Nouvelle version disponible
   - ⚠️ Nouvelle version disponible, mais incompatibilité potentielle
   - 🩹 Nouveau patch disponible
-- **[NEW] Taux de mise à jour :** affiche le pourcentage de modules Jalios à jour.
-- **[NEW] Indicateur de compatibilité :** alerte sur le risque d'incompatibilité entre la dernière version d'un module et la version courante de JPlatform.
-- **[NEW] Lien de téléchargement direct :** option permettant d'ajouter le lien de téléchargement du dernier module.
-- **[NEW] Légende claire :**  détails des icônes affichées directement dans la popup de l'extension.
+- **Taux de mise à jour :** affiche le pourcentage de modules Jalios à jour.
+- **Indicateur de compatibilité :** alerte sur le risque d'incompatibilité entre la dernière version d'un module et la version courante de JPlatform.
+- **Lien de téléchargement direct :** option permettant d'ajouter le lien de téléchargement du dernier module.
+- **Légende claire :**  détails des icônes affichées directement dans la popup de l'extension.
 - **Fonctionnement ciblé :** le lancement n'est possible que depuis la page de gestion des modules.
+- **[NEW] Export CSV :** ajout d'une icône permettant de télécharger le rapport au format CSV
 
 > [!NOTE]  
 > Les fonctionnalités suivantes nécessitent d'être **préalablement connecté** à Jalios Community :
@@ -99,6 +100,7 @@ git clone https://github.com/RudyLaban/JPlugCheck.git
 - [x] ℹ️ Indication sur la compatibilité d'un nouveau module avec la version de JPlatform
 - [x] 💯 Pourcentage de modules à jour
 - [x] ⬇️ Téléchargement des plugins directement depuis l’extension
+- [x] 📊 Export du rapport en CSV
 - [ ] 🎨 Amélioration de l’interface utilisateur
 
 ### Techniques

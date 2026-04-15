@@ -104,6 +104,75 @@ async function startPluginCheck(showDlLink) {
     });
   }
 
+  // Fonction d'export CSV
+  function exportToCSV() {
+    const csvRows = [];
+
+    const siteName = document.querySelector('meta[property="og:site_name"]')?.content;
+    const now = new Date();
+    const formatted = now.toLocaleString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).replace(',', '');
+    const exportInfo = siteName + ' - État des versions des modules au ' + formatted;
+    // En-tête CSV
+    csvRows.push(['Libellé', 'Version installé', 'Dernière version', 'Statut', ' ', exportInfo].join(';'));
+
+    // Parcourir toutes les lignes du tableau
+    rows.forEach((row) => {
+      const versionCell = row.querySelector("td:nth-child(4)");
+      const labelCell = row.querySelector("td:nth-child(5) a");
+      const lastVersionCell = row.querySelector("td.jpc-indicator");
+
+      const notFound = 'Introuvable';
+      const version = versionCell?.childNodes[0].nodeValue.trim() || notFound;
+      const label = labelCell?.textContent.trim() || notFound;
+      const lastVersion = lastVersionCell?.textContent.trim().replace('💾', '').trim() || notFound;
+      
+      // Déterminer le statut
+      let status = notFound;
+      if (lastVersionCell) {
+        if (lastVersionCell.classList.contains('up-to-date')) {
+          status = 'À jour';
+        } else if (lastVersionCell.classList.contains('to-update')) {
+          status = 'Mise à jour disponible';
+        } else if (lastVersionCell.classList.contains('not-compatible')) {
+          status = 'Mise à jour (incompatibilité possible)';
+        } else if (lastVersionCell.classList.contains('patch')) {
+          status = 'Nouveau patch disponible';
+        }
+      }
+
+      // Échapper les guillemets et ajouter la ligne
+      csvRows.push([
+        `"${label.replace(/"/g, '""')}"`,
+        `"${version.replace(/"/g, '""')}"`,
+        `"${lastVersion.replace(/"/g, '""')}"`,
+        `"${status}"`
+      ].join(';'));
+    });
+
+    // Créer le fichier CSV
+    const csvContent = '\uFEFF' + csvRows.join('\n'); // \uFEFF pour UTF-8 BOM
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    // Nom du fichier avec date
+    const date = new Date().toISOString().split('T')[0];
+    link.setAttribute('href', url);
+    link.setAttribute('download', `jalios-plugins-report-${date}.csv`);
+    link.style.display = 'none';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
   // Chaque ligne de module
   const rows = document.querySelectorAll(".table-data > tbody > tr");
 
@@ -134,9 +203,16 @@ async function startPluginCheck(showDlLink) {
         rateClass = "medium";
       }
 
+      // Ajout du bouton d'export et du pourcentage de modules à jours en fin d'analyse
       document.querySelector(".jpc-th").innerHTML += `
-        <span class="rate ${rateClass}" title="Pourcentage de modules à jours.">${rate}%</span>
+        <span class="icons-wrapper">
+          <img src="images/jalios/icons/files/office2013/xlsx.png" class="jpc-export-btn" title="Exporter le rapport en CSV">
+          <span class="rate ${rateClass}" title="Pourcentage de modules à jours.">${rate}%</span>
+        </span>
       `;
+
+      // Événement déclenchant l'export
+      document.querySelector('.icons-wrapper img').addEventListener('click', exportToCSV);
 
       // message au service worker
       chrome.runtime.sendMessage({ type: "contentScriptFinished" });
